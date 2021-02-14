@@ -11,11 +11,11 @@ const server = http.createServer((req, res) => {
 });
 
 var { data, condition } = JSON.parse(fs.readFileSync("./data.json", "utf8"));
-console.log();
+
 function sort(data) {
   let filtered = data
-    .sort((a, b) => b[condition.sort_by[0]] - a[condition.sort_by[0]])
-    .filter((item, i, arr) => (item.disabled != false ? 0 : 1));
+    .filter((item, i, arr) => (item.disabled != false ? 0 : 1))
+    .sort((a, b) => b[condition.sort_by[0]] - a[condition.sort_by[0]]);
 
   return filtered;
 }
