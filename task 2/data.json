@@ -17,9 +17,9 @@
         }
     ],
     "condition": {
-        "exclude": [
+        "include": [
             {
-                "disabled": true
+                "disabled": false
             }
         ],
         "sort_by": [

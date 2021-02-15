@@ -12,12 +12,25 @@ const server = http.createServer((req, res) => {
 
 var { data, condition } = JSON.parse(fs.readFileSync("./data.json", "utf8"));
 
+const condition_variant = condition.include || condition.exclude;
+const conditionKeys = (obj) => Object.keys(obj[0])[0];
+const conditionValues = (obj) => Object.values(obj[0])[0];
+const FILTER = conditionKeys(condition_variant);
+const FILTER_VALUE = conditionValues(condition_variant);
+const SORT = condition.sort_by[0];
+
 function sort(data) {
   let filtered = data
-    .filter((item, i, arr) => (item.disabled != false ? 0 : 1))
-    .sort((a, b) => b[condition.sort_by[0]] - a[condition.sort_by[0]]);
+    .sort((a, b) => b[SORT] - a[SORT])
+    .filter((item) => {
+      if (condition.include) {
+        return item[FILTER] === FILTER_VALUE ? true : false;
+      } else {
+        return item[FILTER] === FILTER_VALUE ? false : true;
+      }
+    });
 
-  return filtered;
+  return JSON.stringify({ result: filtered });
 }
 console.log(sort(data));
 

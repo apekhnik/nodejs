@@ -25,7 +25,6 @@ function findSplitPoint(arr, n) {
     leftSum -= arr[i];
 
     if (leftSum == rightSum) {
-      console.log(A);
       A = B.splice(i);
       return { A, B };
     }
