@@ -10,20 +10,21 @@ const server = http.createServer((req, res) => {
   res.end("Hello World");
 });
 
-const convert = () => {
-  var json = JSON.parse(fs.readFileSync("./info.json", "utf8"));
-  let LENGTH_UNIT_RATIO = JSON.parse(fs.readFileSync("./config.json", "utf8"));
-  const {
-    distance: { unit, value },
-    convert_to,
-  } = json;
+const getLocalFile = (path) => JSON.parse(fs.readFileSync(path, "utf8"));
 
-  const convertN = ({ distance: { unit, value }, convert_to }) =>
-    (value / LENGTH_UNIT_RATIO[unit]) * LENGTH_UNIT_RATIO[convert_to];
-  const answer = { unit: unit, value: convertN(json).toFixed(3) };
-  return JSON.stringify(answer);
-};
-console.log(convert());
+const DIGITS_AFTER_DECIMAL = 3;
+const json = getLocalFile("./info.json");
+const LENGTH_UNIT_RATIO = getLocalFile("./config.json");
+const convertLength = ({ distance: { unit, value }, convert_to }) =>
+  (value / LENGTH_UNIT_RATIO[unit]) * LENGTH_UNIT_RATIO[convert_to];
+
+const convert = (data) =>
+  JSON.stringify({
+    unit: data.convert_to,
+    value: convertLength(json).toFixed(DIGITS_AFTER_DECIMAL),
+  });
+
+console.log("result: ", convert(json));
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
